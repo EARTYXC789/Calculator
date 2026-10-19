@@ -34,21 +34,35 @@ Calculator::Calculator(QWidget *parent)
 
         int row, col;
         if (i == 0) {
-            row = 5;
+            row = 6;
             col = 1;
         }
         else {
-            row = (9 - i) / 3 + 2;
+            row = (9 - i) / 3 + 3;
             col = (i - 1) % 3;
         }
 
-
         layout->addWidget(numBtnList[index], row, col);
-
 
         connect(numBtnList[index], &QPushButton::clicked, display, [display , i]() {display->setText(QString::number(i));});
 
     }
+
+    addBtn = new QPushButton("+");
+    subBtn = new QPushButton("-");
+    tBtn = new QPushButton("x");
+    dBtn = new QPushButton("/");
+    eBtn = new QPushButton("=");
+    layout->addWidget(addBtn, 2 , 3);
+    layout->addWidget(subBtn, 3 , 3);
+    layout->addWidget(tBtn, 4 , 3);
+    layout->addWidget(dBtn, 5 , 3);
+    layout->addWidget(eBtn, 6 , 3);
+    addBtn->setMinimumHeight(60);
+    subBtn->setMinimumHeight(60);
+    tBtn->setMinimumHeight(60);
+    dBtn->setMinimumHeight(60);
+    eBtn->setMinimumHeight(60);
 
 }
 

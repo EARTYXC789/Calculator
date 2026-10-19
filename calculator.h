@@ -14,5 +14,10 @@ public:
 
 private:
     QPushButton* numBtnList[10];
+    QPushButton* addBtn;
+    QPushButton* subBtn;
+    QPushButton* tBtn;
+    QPushButton* dBtn;
+    QPushButton* eBtn;
 };
 #endif // CALCULATOR_H
