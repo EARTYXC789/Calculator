@@ -10,16 +10,15 @@ Calculator::Calculator(QWidget *parent)
     setWindowTitle("Calculator");
     resize(400,600);
     QGridLayout* layout = new QGridLayout(this);
-
     layout->setAlignment(Qt::AlignTop);
 
-    QLineEdit* funDisplay = new QLineEdit(this);
+    funDisplay = new QLineEdit(this);
     funDisplay->setReadOnly(true);
     funDisplay->setAlignment(Qt::AlignRight);
     funDisplay->setMinimumHeight(30);
     layout->addWidget(funDisplay, 0, 0, 1, 6);
 
-    QLineEdit* display = new QLineEdit(this);
+    display = new QLineEdit(this);
     display->setText("0");
     display->setReadOnly(true);
     display->setAlignment(Qt::AlignRight);
@@ -44,7 +43,16 @@ Calculator::Calculator(QWidget *parent)
 
         layout->addWidget(numBtnList[index], row, col);
 
-        connect(numBtnList[index], &QPushButton::clicked, display, [display , i]() {display->setText(QString::number(i));});
+        connect(numBtnList[index], &QPushButton::clicked,this, [this, i]() {
+
+            if (newInput || display->text() == "0") {
+                display->setText(QString::number(i));
+                newInput = false;
+            }
+            else {
+                display->setText(display->text() + QString::number(i));
+            }
+        });
 
     }
 
@@ -64,6 +72,68 @@ Calculator::Calculator(QWidget *parent)
     dBtn->setMinimumHeight(60);
     eBtn->setMinimumHeight(60);
 
+
+    //connect(eBtn, &QPushButton::clicked,this, &Calculator::Calculate);
+
+    //加法
+    connect(addBtn, &QPushButton::clicked, this, [this]() {
+        operation = '+';
+        FunCalculate(operation);
+
+    });
+
+    //等於
+    connect(eBtn, &QPushButton::clicked, this, [this]() {
+        operation = '=';
+        FunCalculate(operation);
+
+    });
+
 }
+
+void Calculator::Calculate() {
+    secondNum = display->text().toDouble();
+
+    double result = 0;
+
+    switch (operation.toLatin1()) {
+    case '+':
+        result = firstNum + secondNum;
+        break;
+    case '-':
+        result = firstNum - secondNum;
+        break;
+    case '*':
+        result = firstNum * secondNum;
+        break;
+    case '/':
+        if (secondNum == 0) {
+            display->setText("Error");
+            return;
+        }
+        result = firstNum / secondNum;
+        break;
+    default:
+        return;
+    }
+
+    display->setText(QString::number(result));
+    QString refun;
+    refun = QString::number(firstNum) + operation.toLatin1() + QString::number(secondNum) + "=";
+    this->funDisplay->setText(refun);
+}
+
+void Calculator::FunCalculate(const QChar& operation) {
+    this->firstNum = display->text().toDouble();
+    if (this->newInput) {
+        this->Calculate();
+    }
+
+    QString refun;
+    refun = QString::number(firstNum) + operation.toLatin1();
+    this->funDisplay->setText(refun);
+    this->newInput = operation.toLatin1() == '=' ? true : false ;
+}
+
 
 Calculator::~Calculator() = default;
