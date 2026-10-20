@@ -49,7 +49,9 @@ Calculator::Calculator(QWidget *parent)
                 display->setText(QString::number(i));
                 newInput = false;
             }
-            else {
+            else if (newInput && display->text().toDouble()) {
+                display->setText(display->text();
+            } else {
                 display->setText(display->text() + QString::number(i));
             }
         });
